@@ -1,89 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeonHub Key Generator</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <header>
-    <img src="images/logo.png" alt="Logo" class="logo" />
-    <h1>Welcome to NeonHub</h1>
+<script>
+  const keyUrl = "https://defugoo.github.io/neonhub/key.txt"; // update if needed
+  const cooldownSeconds = 10;
 
-    <!-- Key Generator -->
-    <button id="getKeyBtn">Get Key</button>
-    <div id="keyDisplay" style="margin-top: 10px; font-weight: bold; color: green;"></div>
-  </header>
+  const getKeyBtn = document.getElementById("getKeyBtn");
+  const keyDisplay = document.getElementById("keyDisplay");
 
-  <script>
-    const pastebinUrl = "https://pastebin.com/raw/vZLTzD1x";
-    const cooldownSeconds = 10;
+  getKeyBtn.addEventListener("click", () => {
+    getKeyBtn.disabled = true;
+    getKeyBtn.textContent = "Waiting...";
+    let seconds = cooldownSeconds;
+    keyDisplay.textContent = `Wait ${seconds} seconds...`;
 
-    const getKeyBtn = document.getElementById("getKeyBtn");
-    const keyDisplay = document.getElementById("keyDisplay");
-
-    getKeyBtn.addEventListener("click", () => {
-      getKeyBtn.disabled = true;
-      getKeyBtn.textContent = "Waiting...";
-      let seconds = cooldownSeconds;
-      keyDisplay.textContent = `Wait ${seconds} seconds...`;
-
-      const timer = setInterval(() => {
-        seconds--;
-        if (seconds > 0) {
-          keyDisplay.textContent = `Wait ${seconds} seconds...`;
-        } else {
-          clearInterval(timer);
-          fetchKeyFromPastebin();
-        }
-      }, 1000);
-    });
-
-    function fetchKeyFromPastebin() {
-      fetch(pastebinUrl)
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to load key");
-          return res.text();
-        })
-        .then((key) => {
-          keyDisplay.textContent = key.trim();
-          getKeyBtn.disabled = false;
-          getKeyBtn.textContent = "Get Key";
-        })
-        .catch((err) => {
-          keyDisplay.textContent = "Error fetching key.";
-          console.error(err);
-        });
-    }
-  </script>
-
-  <!-- Adblock Detection -->
-  <script>
-    function detectAdBlock() {
-      return new Promise((resolve) => {
-        const bait = document.createElement("div");
-        bait.className = "adsbox";
-        bait.style.position = "absolute";
-        bait.style.left = "-9999px";
-        document.body.appendChild(bait);
-
-        setTimeout(() => {
-          const blocked = !bait.offsetHeight || bait.offsetHeight === 0;
-          bait.remove();
-          resolve(blocked);
-        }, 100);
-      });
-    }
-
-    detectAdBlock().then((blocked) => {
-      if (blocked) {
-        alert("Ad blocker detected! Please disable it to support the site.");
+    const timer = setInterval(() => {
+      seconds--;
+      if (seconds > 0) {
+        keyDisplay.textContent = `Wait ${seconds} seconds...`;
+      } else {
+        clearInterval(timer);
+        fetch(keyUrl)
+          .then(res => res.text())
+          .then(key => {
+            keyDisplay.textContent = key.trim();
+            getKeyBtn.disabled = false;
+            getKeyBtn.textContent = "Get Key";
+          })
+          .catch(() => {
+            keyDisplay.textContent = "Error fetching key.";
+            getKeyBtn.disabled = false;
+            getKeyBtn.textContent = "Try Again";
+          });
       }
-    });
-  </script>
-
-  <!-- Work.ink Redirect -->
-  <script src="https://cdn.work.ink/js/redirect.js?id=1040" data-url="https://work.ink/direct/1040" data-max="10"></script>
-</body>
-</html>
+    }, 1000);
+  });
+</script>
