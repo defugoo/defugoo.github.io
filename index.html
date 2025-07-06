@@ -44,6 +44,29 @@
 
       getKeyBtn.textContent = "Waiting...";
     });
+
+    // Ad blocker detection
+    function detectAdBlock() {
+      return new Promise((resolve) => {
+        const bait = document.createElement('div');
+        bait.className = 'adsbox';
+        bait.style.position = 'absolute';
+        bait.style.left = '-9999px';
+        document.body.appendChild(bait);
+
+        window.setTimeout(() => {
+          const detected = !bait.offsetHeight || bait.offsetHeight === 0;
+          document.body.removeChild(bait);
+          resolve(detected);
+        }, 100);
+      });
+    }
+
+    detectAdBlock().then((isBlocked) => {
+      if (isBlocked) {
+        alert('Ad blocker detected! Please consider disabling it to support our site.');
+      }
+    });
   </script>
 
   <script src="https://cdn.work.ink/js/redirect.js?id=1040" data-url="https://work.ink/direct/1040" data-max="10"></script>
