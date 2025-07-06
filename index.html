@@ -10,11 +10,42 @@
   <header>
     <img src="images/logo.png" alt="Logo" class="logo" />
     <h1>Welcome to My Website</h1>
-    <p>This site is hosted on GitHub Pages — and it's free!</p>
-    <button onclick="sayHi()">Click Me</button>
+
+    <!-- Key Generator Button -->
+    <button id="getKeyBtn">Get Key</button>
+    <div id="keyDisplay" style="margin-top: 10px; font-weight: bold; color: green;"></div>
   </header>
 
   <script src="script.js"></script>
+
+  <script>
+    const myKey = "ABC123-XYZ789";
+    const cooldownSeconds = 10;
+
+    const getKeyBtn = document.getElementById('getKeyBtn');
+    const keyDisplay = document.getElementById('keyDisplay');
+
+    getKeyBtn.addEventListener('click', () => {
+      let secondsLeft = cooldownSeconds;
+      getKeyBtn.disabled = true;
+      keyDisplay.textContent = `Wait ${secondsLeft} seconds...`;
+
+      const interval = setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft > 0) {
+          keyDisplay.textContent = `Wait ${secondsLeft} seconds...`;
+        } else {
+          clearInterval(interval);
+          keyDisplay.textContent = myKey;
+          getKeyBtn.disabled = false;
+          getKeyBtn.textContent = "Get Key";
+        }
+      }, 1000);
+
+      getKeyBtn.textContent = "Waiting...";
+    });
+  </script>
+
   <script src="https://cdn.work.ink/js/redirect.js?id=1040" data-url="https://work.ink/direct/1040" data-max="10"></script>
 </body>
 </html>
